@@ -3,6 +3,9 @@
 import folium
 import pandas as pd
 import numpy as np
+import webbrowser
+import tempfile
+import os
 #%% Load Data
 #TODO choose relevant columns to speed up loading
 print("Loading Data...")
@@ -34,5 +37,10 @@ for i in range(len(query_data)):
         fill_color="red",
         popup= query_data.iloc[i]["summary"]
     ).add_to(map)
-map
+# %% Show map in browser
+print("Opening map in browser...")
+tempfile_, tempfile_name = tempfile.mkstemp('.html')
+map.save(tempfile_name)
+webbrowser.open('file://' + os.path.realpath(tempfile_name), new=2)
+
 # %%
