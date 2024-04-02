@@ -5,6 +5,7 @@ import webbrowser
 from threading import Timer
 import pandas as pd
 import numpy as np
+import filter_data as filter
 
 #Load data, get unique values and set defaults
 data = pd.read_csv("GTD.csv")
@@ -15,19 +16,25 @@ year_default = 2001
 country_default = "United States"
 
 def generate_markers(country, year):
-    filtered_data = data[(data["country_txt"] == country) & (data["iyear"] == year)]
-    #TODO add region filter and other filters
-    #TODO add range of years
-    #TODO think about how to handle missing data
-    filtered_data = filtered_data.dropna(subset=["latitude", "longitude","nkill","nwound"])
+    filtered_data = filter.filter_basic(data, country, year)
     markers = []
     for i in range(len(filtered_data)):
         date_string = f"{filtered_data.iloc[i]['iday']}/{filtered_data.iloc[i]['imonth']}/{filtered_data.iloc[i]['iyear']}"
         tool_tip = date_string + f": \n{filtered_data.iloc[i]['gname']} attack: \n{int(filtered_data.iloc[i]['nkill'])} dead, {int(filtered_data.iloc[i]['nwound'])} wounded"
-        marker = dl.Marker(position=[filtered_data.iloc[i]["latitude"], filtered_data.iloc[i]["longitude"]], children=[
-            dl.Tooltip(tool_tip),
-            dl.Popup(filtered_data.iloc[i]["summary"])
-        ])
+        #scale marker to number of casualties
+        scale = 10 ** (3) * np.sqrt(2 * filtered_data.iloc[i]['nkill'] + filtered_data.iloc[i]['nwound']) + 100
+        marker = dl.Circle(center=[filtered_data.iloc[i]["latitude"], filtered_data.iloc[i]["longitude"]], 
+            radius= scale,
+            #TODO change color based on type of attack?
+            #TODO issue with multiple markers at same location
+            color="black",
+            fillColor="red",
+            fillOpacity=0.5,
+            children=[
+                dl.Tooltip(tool_tip),
+                dl.Popup(filtered_data.iloc[i]["summary"]),
+            ]
+        )
         markers.append(marker)
     return markers
 
@@ -55,8 +62,8 @@ app.layout = html.Div([
         dl.TileLayer(),
         dl.LayerGroup(id='marker-layer', children = generate_markers("United States", 2001))]
     
-    ),       
-    ])
+    ),   
+])
 
 # Update markers on map
 @app.callback(
@@ -66,6 +73,7 @@ app.layout = html.Div([
 )
 def update_map(country, year):
     return generate_markers(country, year)
+
 
 
 def open_browser():
