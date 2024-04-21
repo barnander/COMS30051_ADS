@@ -35,7 +35,7 @@ plt.title('Correlation Matrix Between Arms Imports and Terror Incidents')
 plt.show()
 
 # Shift the terror incidents data by 1 year to create a 1-year lag
-global_terror_aggregated['total_incidents_lagged'] = global_terror_aggregated['total_incidents'].shift(-1)
+global_terror_aggregated['total_incidents_lagged'] = global_terror_aggregated['total_incidents'].shift(0)
 
 # Merge the datasets on the year
 merged_global_data = pd.merge(global_arms_imports_aggregated, global_terror_aggregated, on='iyear', how='inner')
