@@ -1,0 +1,186 @@
+Afghanistan
+Albania
+Algeria
+Angola
+Antigua and Barbuda
+Argentina
+Armenia
+Austria
+Australia
+Azerbaijan
+Bahrain
+Bangladesh
+Barbados
+Bahamas
+Burundi
+Belgium
+Benin
+Burkina Faso
+Bhutan
+Nigeria
+Belarus
+Belize
+Bolivia
+Bosnia-Herzegovina
+Botswana
+Brazil
+Brunei Darussalam
+Bulgaria
+Cameroon
+Canada
+Cabo Verde
+Central African Republic
+Chad
+Chile
+China
+Cambodia
+Colombia
+Comoros
+Congo
+Costa Rica
+Côte d'Ivoire
+Croatia
+Cuba
+Cyprus
+Czech Republic
+Denmark
+Djibouti
+Dominican Republic
+Congo, the Democratic Republic of the
+Ecuador
+Egypt
+Equatorial Guinea
+Eritrea
+Estonia
+Timor-Leste
+Ethiopia
+Finland
+Fiji
+France
+Germany
+Gabon
+Gambia
+Guinea-Bissau
+Georgia
+Ghana
+Grenada
+Greece
+Guatemala
+Guinea
+Guyana
+Haiti
+Honduras
+Hungary
+Iceland
+India
+Indonesia
+Iran, Islamic Republic of
+Ireland
+Iraq
+Israel
+Italy
+Jamaica
+Japan
+Jordan
+Kazakhstan
+Kenya
+Kiribati
+North Korea
+South Korea
+Kuwait
+Kyrgyzstan
+Lao People's Democratic Republic
+Latvia
+Lebanon
+Lesotho
+Liberia
+Lithuania
+Luxembourg
+Libya
+Macedonia, the former Yugoslav Republic of
+Madagascar
+Malaysia
+Marshall Islands
+Mauritius
+Mexico
+Micronesia, Federated States of
+Mali
+Maldives
+Moldova, Republic of
+Mongolia
+Morocco
+Mozambique
+Mauritania
+Malta
+Montenegro
+Malawi
+Myanmar
+Namibia
+Nepal
+Netherlands
+Nicaragua
+Niger
+Norway
+New Zealand
+Oman
+Pakistan
+Palau
+Panama
+Papua New Guinea
+Paraguay
+Peru
+Philippines
+Poland
+Portugal
+Qatar
+Romania
+Russian Federation
+Rwanda
+South Africa
+Western Sahara
+El Salvador
+Samoa
+Saudi Arabia
+Senegal
+Serbia
+Seychelles
+Sierra Leone
+Singapore
+Saint Kitts and Nevis
+Slovakia
+Slovenia
+Solomon Islands
+Somalia
+Spain
+Sri Lanka
+South Sudan
+Sudan
+Suriname
+Saint Vincent
+Swaziland
+Sweden
+Switzerland
+Syrian Arab Republic
+Tajikistan
+Tanzania, United Republic of
+Thailand
+Togo
+Tonga
+Trinidad and Tobago
+Turkmenistan
+Tunisia
+Turkey
+Tuvalu
+United Arab Emirates
+Uganda
+United Kingdom
+Ukraine
+Uruguay
+United States
+Uzbekistan
+Vanuatu
+Venezuela, Bolivarian Republic of
+Viet Nam
+Yemen
+Zimbabwe
+Zambia
