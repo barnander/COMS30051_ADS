@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Terrorism and Arms Transfers Visualization</title>
+    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2/dist/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/nouislider/distribute/nouislider.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/nouislider/distribute/nouislider.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        body, html {
+            height: 100%; 
+            margin: 0; 
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            padding: 40px 20px 20px 20px;
+            margin: auto;
+            width: 80%;
+        }
+        .dual-selector {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        .country-selector {
+            width: 300px; 
+            flex-shrink: 0;  
+            margin-right: 20px;
+        }
+        .year-range-selector {
+            flex-grow: 1;  
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .select-container, .slider-container, .form-inline {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .form-group {
+            margin-bottom: 20px; 
+        }
+        .form-inline .form-group {
+            margin-right: 10px; 
+            flex: 1; 
+        }
+        .form-inline .form-group:last-child {
+            margin-right: 0; 
+        }
+        iframe {
+            width: 100%; 
+            height: 700px; 
+            border: none;
+        }
+        select, #year-range-slider {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form id="dataForm">
+            <div class="form-group dual-selector">
+                <div class="country-selector">
+                    <label for="selected_country">Country:</label>
+                    <select id="selected_country" name="selected_country">
+                        <option value="">Select a country</option>
+                        {% for country in countries %}
+                        <option value="{{ country }}">{{ country }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="year-range-selector">
+                    <label for="year-range-slider">Year Range:</label>
+                    <div id="year-range-slider"></div>
+                </div>
+            </div>
+            <div class="form-inline">
+                <div class="form-group">
+                    <label for="vis_type">Attack Visualization Type:</label>
+                    <select id="vis_type">
+                        <option value="heatmap">Heatmap</option>
+                        <option value="scatterplot">Scatterplot</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="large_arms" checked> Show Large Arms Transfers</label>
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="small_arms" checked> Show Small Arms Transfers</label>
+                </div>
+            </div>
+            <button type="button" onclick="updateMap()">Update Map</button>
+        </form>
+        <iframe id="mapFrame" src=""></iframe>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#selected_country').select2();
+            
+            var yearRangeSlider = document.getElementById('year-range-slider');
+
+            noUiSlider.create(yearRangeSlider, {
+                start: [1950, 2022],
+                connect: true,
+                range: {
+                    'min': 1970,
+                    'max': 2022
+                },
+                format: wNumb({
+                    decimals: 0
+                }),
+                tooltips: [wNumb({decimals: 0}), wNumb({decimals: 0})]
+            });
+
+            window.updateMap = function() {
+                var selected_country = $('#selected_country').val();
+                var start_year = yearRangeSlider.noUiSlider.get()[0];
+                var end_year = yearRangeSlider.noUiSlider.get()[1];
+                var vis_type = $('#vis_type').val();
+                var large_arms = $('#large_arms').is(':checked');
+                var small_arms = $('#small_arms').is(':checked');
+                var frame = document.getElementById('mapFrame');
+                var url = `/generate_map?country=${selected_country}&start_year=${start_year}&end_year=${end_year}&vis_type=${vis_type}&large_arms=${large_arms}&small_arms=${small_arms}`;
+                frame.src = url; 
+            };
+        });
+    </script>
+</body>
+</html>
