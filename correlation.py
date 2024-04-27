@@ -14,9 +14,6 @@ arms_aggregated = trade_register_data.groupby(['Recipient', 'Year of order']).ag
 # Renaming columns for clarity and to prevent conflicts in merging
 arms_aggregated.rename(columns={'Recipient': 'country', 'Year of order': 'year', 'Number delivered': 'total_arms_delivered', 'SIPRI TIV for total order': 'total_arms_value'}, inplace=True)
 
-plt.plot(arms_aggregated['total_arms_delivered'], arms_aggregated['Year'], label='Arms Delivered')
-plt.show()
-
 # Now, let's merge this with the terrorism data on 'country' and 'year'
 yearly_agg_data.rename(columns={'country_txt': 'country', 'iyear': 'year'}, inplace=True)
 merged_data = pd.merge(yearly_agg_data, arms_aggregated, how='left', on=['country', 'year'])
