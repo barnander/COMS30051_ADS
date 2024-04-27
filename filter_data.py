@@ -3,6 +3,14 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import nltk
+nltk.download('punkt')
+nltk.download('wordnet')
+nltk.download('stopwords')
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import word_tokenize
+from collections import Counter
 
 
 #%%
@@ -10,7 +18,6 @@ gtd_data = pd.read_excel("globalterrorismdb_0522dist.xlsx")
 
 #%%
 gtd_data.columns
-
 #%% prepare data filtering 
 def id_to_txt_dict(cat):
     cat_ids = gtd_data[cat].unique()
@@ -35,7 +42,7 @@ gtd_data['death'] = gtd_data['nkill'] > 0
 
 
 
-weap_cats = ['weaptype1', 'weaptype2', 'weaptype3']
+weap_cats = ['weaptype' + str(i) for i in range(1, 5)]
 #Filter data for events where firearms were used
 gtd_data['firearms'] = (gtd_data[weap_cats] == 5).any(axis = 1)
 
@@ -44,6 +51,17 @@ gtd_data['explosives'] = (gtd_data[weap_cats] == 6).any(axis = 1)
 
 #Filter data for events where incendiary devices were used
 gtd_data['incendiary'] = (gtd_data[weap_cats] == 8).any(axis = 1)
+
+
+
+#Add columns for weapon subtypes
+weap_subtype_cats = ['weapsubtype' + str(i) for i in range(1, 5)]
+weap_sub_types = gtd_data['weapsubtype1'].unique()
+weap_sub_types = weap_sub_types[~np.isnan(weap_sub_types)]
+weap_sub_dict = id_to_txt_dict("weapsubtype1")
+weap_sub_names = [weap_sub_dict[weap_sub_type] for weap_sub_type in weap_sub_types]
+for weap_sub_type in weap_sub_types:
+    gtd_data[weap_sub_dict[weap_sub_type]] = (gtd_data[weap_subtype_cats] == weap_sub_type).any(axis = 1)
 
 
 #Filter data for target types
@@ -68,6 +86,7 @@ for attack_type in attack_types:
 grouped = gtd_data.groupby(['country_txt', 'iyear'])
 
 # Aggregate the required data
+"""
 result_df = grouped.agg(
     total_incidents=pd.NamedAgg(column='iyear', aggfunc='size'),
     incidents_with_injury_or_death=pd.NamedAgg(column='injury_or_death', aggfunc='sum'),
@@ -78,10 +97,10 @@ result_df = grouped.agg(
     explosives=pd.NamedAgg(column='explosives', aggfunc='sum'),
     incendiary=pd.NamedAgg(column='incendiary', aggfunc='sum'),
 ).reset_index()
-
+"""
 
 #%%
-sum_columns = ["injury_or_death", "death", "nkill","nwound","firearms","explosives","incendiary",*targ_names,*attack_names]
+sum_columns = ["injury_or_death", "death", "nkill","nwound","firearms","explosives","incendiary",*targ_names,*attack_names,*weap_sub_names]
 # Performing the groupby and aggregation
 result_df = gtd_data.groupby(['country_txt','iyear']).agg(
     No_Incidents=('iyear', 'size'),  # Counting the number of occurrences in each group
@@ -92,8 +111,60 @@ result_df = gtd_data.groupby(['country_txt','iyear']).agg(
 result_df.to_csv("yearly_agg.csv")
     
 
+#%%
+def process_text(text):
+    stop_words = set(stopwords.words('english'))
+    #remove specific, motive, attack, group, claimed, responsibility, unknown.
+    stop_words.update(['motive', 'specific', 'attack', 'group', 'claimed', 'responsibility', 'unknown', 'however','stated','alleged','noted','incident','targeted','may','source','incident','carried','suspected','part','larger','trend','victim'])
+    lemmatizer = WordNetLemmatizer()
 
+    # Tokenize text
+    words = word_tokenize(text.lower())
+    
+    # Remove stopwords and lemmatize
+    lemmatized_words = [lemmatizer.lemmatize(word) for word in words if word not in stop_words and word.isalpha()]
+    return lemmatized_words
+def count_words(df, col):
+    flattened = [word for row in df[col] for word in row]
+    return Counter(flattened)
+# %% investigate motivation
+#count occurences of words in motive
+gtd_motives = gtd_data.dropna(subset = ['motive'], inplace = False)
+gtd_motives['motive'] = gtd_motives['motive'].apply(lambda x: process_text(x))
+#remove rows with empty motive
+gtd_motives = gtd_motives[gtd_motives['motive'].apply(lambda x: len(x) > 0)]
+#count occurences of words in motive
+counted_words = count_words(gtd_motives, 'motive')
+print(counted_words.most_common(20))
+# %% filter for higest correlation countries
+high_corr_countries = ['Montenegro','Burkina Faso','Czechoslavakia','Saudi Arabia','Bosnia-Herzegovina','Hungary','Nicauragua','Dominican Republic','Sierra Leone','Lithuania','Mali','Singapore','China','Niger','Switzerland']
+high_corr_data = gtd_data[gtd_data['country_txt'].isin(high_corr_countries)]
+# %% investigate motivation
+#count occurences of words in motive
+high_corr_data = high_corr_data.dropna(subset = ['motive'], inplace = False)
+high_corr_data['motive'] = high_corr_data['motive'].apply(lambda x: process_text(x))
+#remove rows with empty motive
+high_corr_data = high_corr_data[high_corr_data['motive'].apply(lambda x: len(x) > 0)]
+#count occurences of words in motive
+counted_words = count_words(high_corr_data, 'motive')
+print(counted_words.most_common(20))
 
+# %% filter for low correlation countries
+low_corr_countries = ['Libya','Azerbaijan','Yugoslavia','Norway','Tajikistan','Yemen','Jamaica','Bahamas','Paraguay','Mauritania','Armenia','North Yemen','Syria','Uruguay','Soviet Union']
+low_corr_data = gtd_data[gtd_data['country_txt'].isin(low_corr_countries)]
+# %% investigate motivation
+low_corr_data = low_corr_data.dropna(subset = ['motive'], inplace = False)
+low_corr_data['motive'] = low_corr_data['motive'].apply(lambda x: process_text(x))
+#remove rows with empty motive
+low_corr_data = low_corr_data[low_corr_data['motive'].apply(lambda x: len(x) > 0)]
+#count occurences of words in motive
+counted_words = count_words(low_corr_data, 'motive')
+print(counted_words.most_common(20))
 
-
+# %%
+for country_name in low_corr_countries:
+    country_data = gtd_motives[gtd_motives['country_txt'] == country_name]
+    counted_words = count_words(country_data, 'motive')
+    print(f"Most common words in {country_name}")
+    print(counted_words.most_common(20))
 # %%
