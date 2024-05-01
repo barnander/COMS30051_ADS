@@ -42,3 +42,9 @@ The required datasets for this application are hosted on Google Drive. Please do
 
 3. Open http://127.0.0.1:5000/ on your web browser
 
+Watch my video:
+
+<video controls width="250">
+    <source src="https://github.com/barnander/COMS30051_ADS/blob/main/Terrorism%20and%20Arms%20Transfers%20Visualization%20-%20Google%20Chrome%202024-05-01%2015-22-49.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
