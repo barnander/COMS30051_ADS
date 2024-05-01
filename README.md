@@ -3,6 +3,7 @@
 
 This application provides a visualization interface for analyzing terrorism data and arms transfer data.
 
+![TerrorismandArmsTransfersVisualization-GoogleChrome2024-05-0115-22-49-ezgif com-video-to-gif-converter](https://github.com/barnander/COMS30051_ADS/assets/114615588/c6aa3c30-007e-4d31-b110-187061aeac9b)
 ## Prerequisites
 
 Before you begin, ensure you have installed Python 3.6 or higher.
@@ -38,13 +39,7 @@ The required datasets for this application are hosted on Google Drive. Please do
 
 1. Go to the "visualization app" directory.
 
-2. Run app.py
+2. Run app.py (ensure you are in the Visulisation app folder)
 
 3. Open http://127.0.0.1:5000/ on your web browser
 
-Watch my video:
-
-<video controls width="250">
-    <source src="https://github.com/barnander/COMS30051_ADS/blob/main/Terrorism%20and%20Arms%20Transfers%20Visualization%20-%20Google%20Chrome%202024-05-01%2015-22-49.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-</video>
