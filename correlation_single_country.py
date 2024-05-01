@@ -7,6 +7,11 @@ import pandas as pd
 trade_register_data = pd.read_csv('trade-register.csv', encoding='ISO-8859-1')
 yearly_agg_data = pd.read_csv('yearly_agg.csv')
 
+# Filter data to keep records from 1991 onwards
+trade_register_data = trade_register_data[trade_register_data['Year of order'] >= 1991]
+yearly_agg_data = yearly_agg_data[yearly_agg_data['iyear'] >= 1991]
+
+
 country = 'Israel'
 
 # Aggregating arms imports data by country and year for Afghanistan

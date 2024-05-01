@@ -6,6 +6,10 @@ import matplotlib.pyplot as plt
 trade_register_data = pd.read_csv('trade-register.csv', encoding='ISO-8859-1')
 yearly_agg_data = pd.read_csv('yearly_agg.csv')
 
+# Filter data to keep records from 1991 onwards
+trade_register_data = trade_register_data[trade_register_data['Year of order'] >= 1991]
+yearly_agg_data = yearly_agg_data[yearly_agg_data['iyear'] >= 1991]
+
 # Rename columns in datasets to facilitate merging
 arms_aggregated = trade_register_data.groupby(['Recipient', 'Year of order']).agg({
     'Number delivered': 'sum',
