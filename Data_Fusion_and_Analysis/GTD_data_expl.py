@@ -35,7 +35,6 @@ def id_to_txt_dict(cat):
     cat_txts = data[cat + "_txt"].unique()
     if cat[:-1] == "weaptype":
         cat_txts[7] = 'Vehicle'
-        cat_txts[6] = 'Sabotage'
     id_to_txt = {cat_ids[i]: cat_txts[i] for i in range(len(cat_ids)) if type(cat_txts[i]) == str}
     return id_to_txt
 
@@ -59,7 +58,6 @@ def cat_var_stats_multiple(var_name, number, data = data, log = False):
     for i, value in enumerate(values):
         for j in range(1,number+1):
             num_val[i] += len(data[data[var_name + str(j)] == value])
-    print(num_val)
     value_names = [dict_names[value] for value in values]
     plt.bar(value_names,num_val, log = log)
     plt.ylabel("Number of Incidents")
@@ -101,7 +99,7 @@ plt.show()
 plt.figure()
 cat_var_stats("targtype1")
 plt.show()
-
+*
 # %%
 
 high_corr_countries = ['Montenegro','Burkina Faso','Czechoslavakia','Saudi Arabia','Bosnia-Herzegovina','Hungary','Nicauragua','Dominican Republic','Sierra Leone','Lithuania','Mali','Singapore','China','Niger','Switzerland']
@@ -129,43 +127,3 @@ chi2, p, dof, expected = stats.chi2_contingency(cross_tab)
 print("Chi-square Statistic:", chi2)
 print("P-value:", p)
 # %%
-plt.figure()
-cat_var_stats("targtype1")
-plt.show()
-# %%
-plt.plot()
-cat_var_stats_multiple('weaptype',4, log = True)
-plt.xlabel("Weapon Type")
-plt.ylabel("Times Used in Attacks")
-plt.show()
-# %%
-weap_cats = ['weaptype' + str(i) for i in range(1, 5)]
-#Filter data for events where firearms were used
-data['firearms'] = (data[weap_cats] == 5).any(axis = 1)
-data['no_weapons'] = 4 - data[weap_cats].isna().sum(axis = 1)
-# %% group by year
-year_group = data.groupby(['iyear']).agg({
-    'nkill': 'sum',
-    'nwound': 'sum',
-    'no_weapons': 'sum',
-    'firearms': 'sum',
-    'eventid': 'count'
-}).reset_index()
-year_group['prop_firearms'] = year_group['firearms']/year_group['no_weapons']
-
-plt.plot(year_group['iyear'],year_group['prop_firearms'])
-# %%
-year_country_group = data.groupby(['iyear','country_txt']).agg({
-    'eventid': 'count',
-    'nkill': 'sum',
-    'nwound': 'sum',
-    'no_weapons': 'sum',
-    'firearms': 'sum',
-    'eventid': 'count'
-}).reset_index()
-year_country_group['prop_firearms'] = year_country_group['firearms']/year_country_group['no_weapons']
-year_country_group['death_rate'] = year_country_group['nkill']/year_country_group['eventid']
-print(year_country_group.shape)
-year_country_group.corr()['prop_firearms']['death_rate']
-# %%
-data.corr()['nkill']['nwound']
